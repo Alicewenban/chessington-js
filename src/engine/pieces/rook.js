@@ -7,15 +7,13 @@ export default class Rook extends Piece {
     constructor(player) {
         super(player);
     }
-
+    isTakeable(){
+        return true;
+    }
     getAvailableMoves(board) {
         let square = board.findPiece(this);
         var moves= this.getLateralMoves(board,square);
-        moves.forEach(move=>{
-            if(board.getPiece(move) instanceof King){
-                moves.splice(moves.indexOf(move),1);
-            };
-        });
+        moves = this.removeInvalidMoves(moves,board);
         return moves;
     }
 }

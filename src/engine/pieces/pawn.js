@@ -2,11 +2,15 @@ import Piece from './piece';
 import Square from '../square';
 import Player from '../player';
 import GameSettings from '../gameSettings';
+
+
 export default class Pawn extends Piece {
     constructor(player) {
         super(player);
     }
-
+    isTakeable(){
+        return true;
+    }
     getAvailableMoves(board) {
         let square = board.findPiece(this);
         let direction = this.player === Player.WHITE ? 1 : -1;
@@ -22,6 +26,22 @@ export default class Pawn extends Piece {
                 moves.push(twoInFront);
             }
         }
+     
+        let diagA = Square.at(square.row+1*direction,square.col+1);
+        let diagB = Square.at(square.row+1*direction,square.col-1);
+        
+        if(canMoveOne && board.isOccupied(diagA)){
+            console.log(diagA);
+            moves.push(diagA);
+        }
+     
+        if(canMoveOne && board.isOccupied(diagB)){
+            console.log(diagB);
+            moves.push(diagB);
+        }
+
+        moves = this.removeInvalidMoves(moves,board);
+        
         return moves;
     }
 }

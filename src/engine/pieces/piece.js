@@ -1,13 +1,12 @@
 import GameSettings from '../gameSettings';
 import Square from '../square';
 
-
 export default class Piece {
     constructor(player) {
         this.player = player;
         this.hasMoved=false;
     }
-
+  
     getAvailableMoves(board) {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
@@ -76,6 +75,18 @@ export default class Piece {
                 moves.push(Square.at(i,square.col));
             }
         }
+        return moves;
+    }
+
+    removeInvalidMoves(moves,board){
+        moves.forEach(move=>{
+           var movingTo=board.getPiece(move) ;
+            if(typeof movingTo != 'undefined'){  
+                if(!movingTo.isTakeable() || movingTo.player === this.player ){
+                    moves.splice(moves.indexOf(move),1);
+                }
+            }
+        });
         return moves;
     }
 }

@@ -53,4 +53,6 @@ export default class Board {
         let colInBoard = square.col< GameSettings.BOARD_SIZE && square.col >= 0;
         return colInBoard && rowInBoard;
     }
+
+
 }
