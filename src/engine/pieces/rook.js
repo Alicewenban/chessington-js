@@ -1,4 +1,6 @@
 import Piece from './piece';
+import GameSettings from '../gameSettings';
+import Square from '../square';
 
 export default class Rook extends Piece {
     constructor(player) {
@@ -6,6 +8,7 @@ export default class Rook extends Piece {
     }
 
     getAvailableMoves(board) {
-        return new Array(0);
+        let square = board.findPiece(this);
+        return this.getLateralMoves(square);
     }
 }

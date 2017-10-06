@@ -1,4 +1,6 @@
 import Piece from './piece';
+import GameSettings from '../gameSettings';
+import Square from '../square';
 
 export default class Bishop extends Piece {
     constructor(player) {
@@ -6,6 +8,8 @@ export default class Bishop extends Piece {
     }
 
     getAvailableMoves(board) {
-        return new Array(0);
-    }
+        let square = board.findPiece(this);
+        return this.getDiagonalMoves(square);
+        }
+
 }
