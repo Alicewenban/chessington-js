@@ -84,6 +84,53 @@ describe('Pawn', () => {
 
             moves.should.not.deep.include(Square.at(5, 3));
         });
+        it('Can move like En passant', () => {
+            const pawn = new Pawn(Player.WHITE);
+            const opposingPawn = new Pawn(Player.BLACK);
+
+            board.setPiece(Square.at(3, 4), pawn);
+            board.setPiece(Square.at(6, 3), opposingPawn);
+
+            board.movePiece(Square.at(3, 4),Square.at(4, 4));
+            board.movePiece(Square.at(6, 3),Square.at(4, 3));
+
+            const moves = pawn.getAvailableMoves(board);
+       
+            moves.should.deep.include(Square.at(5, 3));
+        });
+        it('En passant takes opposing pawn', () => {
+            const pawn = new Pawn(Player.WHITE);
+            const opposingPawn = new Pawn(Player.BLACK);
+
+            board.setPiece(Square.at(3, 4), pawn);
+            board.setPiece(Square.at(6, 3), opposingPawn);
+            
+            board.movePiece(Square.at(3, 4),Square.at(4, 4));
+            board.movePiece(Square.at(6, 3),Square.at(4, 3));
+            board.movePiece(Square.at(4, 4),Square.at(5, 3));
+            
+            const isTaken = typeof board.getPiece(Square.at(4, 3)) === 'undefined';
+
+            isTaken.should.be.true;
+        });
+        it('En passant Exspires', () => {
+            const pawn = new Pawn(Player.WHITE);
+            const otherpawn = new Pawn(Player.WHITE);
+
+            const opposingPawn = new Pawn(Player.BLACK);
+
+            board.setPiece(Square.at(3, 4), pawn);
+            board.setPiece(Square.at(5, 4), otherpawn);
+
+            board.setPiece(Square.at(6, 3), opposingPawn);
+            
+            board.movePiece(Square.at(3, 4),Square.at(4, 4));
+            board.movePiece(Square.at(6, 3),Square.at(4, 3));
+            board.movePiece(Square.at(5,4),Square.at(6,4));
+            const moves = pawn.getAvailableMoves(board);
+            
+            moves.should.not.deep.include(Square.at(5, 3));
+        });
 
     });
 
@@ -186,5 +233,7 @@ describe('Pawn', () => {
 
         moves.should.not.deep.include(Square.at(4, 3));
     });
+
+    
 
 });

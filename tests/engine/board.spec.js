@@ -3,6 +3,8 @@ import Board from '../../src/engine/board';
 import Pawn from '../../src/engine/pieces/pawn';
 import Player from '../../src/engine/player';
 import Square from '../../src/engine/square';
+import Rook from '../../src/engine/pieces/rook';
+import King from '../../src/engine/pieces/king';
 
 describe('Board', () => {
 
@@ -35,6 +37,20 @@ describe('Board', () => {
 
             // Assert
             board.findPiece(pawn).should.eql(square); // Object equivalence: different objects, same data
+        });
+
+        it('check is detected', () => {
+            // Arrange
+            const king = new King(Player.BLACK);
+            const rook = new Rook(Player.WHITE);
+
+            // Act
+            board.setPiece(Square.at(7,4),king);
+            board.setPiece(Square.at(5,3),rook);
+            board.movePiece(Square.at(5,3),Square.at(5,4));
+
+            // Assert
+            board.checkBlack.should.be.true;
         });
 
     });

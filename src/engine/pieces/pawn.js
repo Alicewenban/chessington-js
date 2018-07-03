@@ -7,7 +7,10 @@ import GameSettings from '../gameSettings';
 export default class Pawn extends Piece {
     constructor(player) {
         super(player);
+        this.leftEnPassant= false;
+        this.rightEnPassant= false;
     }
+
     isTakeable(){
         return true;
     }
@@ -31,16 +34,22 @@ export default class Pawn extends Piece {
         let diagB = Square.at(square.row+1*direction,square.col-1);
         
         if(canMoveOne && board.isOccupied(diagA)){
-            console.log(diagA);
             moves.push(diagA);
         }
      
         if(canMoveOne && board.isOccupied(diagB)){
-            console.log(diagB);
             moves.push(diagB);
         }
 
         moves = this.removeInvalidMoves(moves,board);
+
+        if(this.leftEnPassant){
+            moves.push(Square.at(square.row+direction*1,square.col-1));
+        }
+
+        if(this.rightEnPassant){
+            moves.push(Square.at(square.row+direction*1,square.col+1));
+        }
         
         return moves;
     }

@@ -1,9 +1,11 @@
 import 'chai/register-should';
 import King from '../../../src/engine/pieces/king';
 import Pawn from '../../../src/engine/pieces/pawn';
+import Rook from '../../../src/engine/pieces/rook';
 import Board from '../../../src/engine/board';
 import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
+import Bishop from '../../../src/engine/pieces/bishop';
 
 describe('King', () => {
 
@@ -75,5 +77,55 @@ describe('King', () => {
         const moves = king.getAvailableMoves(board);
 
         moves.should.not.deep.include(Square.at(5, 5));
+    });
+
+    it('can move like castling left', () => {
+        const king = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+
+        board.setPiece(Square.at(0, 4), king);
+        board.setPiece(Square.at(0, 0), rook);
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.deep.include(Square.at(0, 1));
+    });
+    it('can move like castling right', () => {
+        const king = new King(Player.BLACK);
+        const rook = new Rook(Player.BLACK);
+
+        board.setPiece(Square.at(7, 4), king);
+        board.setPiece(Square.at(7, 7), rook);
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.deep.include(Square.at(7, 6));
+    });
+
+    it('castling moves rook', () => {
+        const king = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+
+        board.setPiece(Square.at(0, 4), king);
+        board.setPiece(Square.at(0, 0), rook);
+        board.movePiece(Square.at(0,4),Square.at(0,1));
+
+        const rookMoved = board.getPiece(Square.at(0,2)) instanceof Rook;
+
+        rookMoved.should.be.true;
+    });
+
+    it('cannot castle through other pieces', () => {
+        const king = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+        const otherpiece = new Bishop(Player.WHITE);
+
+        board.setPiece(Square.at(0, 4), king);
+        board.setPiece(Square.at(0, 0), rook);
+        board.setPiece(Square.at(0,2),otherpiece);
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.not.deep.include(Square.at(0, 1));
     });
 });
