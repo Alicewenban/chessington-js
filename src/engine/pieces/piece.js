@@ -82,7 +82,7 @@ export default class Piece {
         moves.forEach(move=>{
            var movingTo=board.getPiece(move) ;
             if(typeof movingTo != 'undefined'){  
-                if(!movingTo.isTakeable() || movingTo.player === this.player ){
+                if(movingTo.player === this.player ){
                     moves.splice(moves.indexOf(move),1);
                 }
             }

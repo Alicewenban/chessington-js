@@ -11,9 +11,7 @@ export default class Pawn extends Piece {
         this.rightEnPassant= false;
     }
 
-    isTakeable(){
-        return true;
-    }
+   
     getAvailableMoves(board) {
         let square = board.findPiece(this);
         let direction = this.player === Player.WHITE ? 1 : -1;

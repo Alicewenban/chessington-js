@@ -52,6 +52,7 @@ export default class Board {
             this.enableEnPassant(movingPiece,fromSquare,toSquare);
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
         }
+        checkCheck();
     }
 
     disableExpiredEnPassants(){
@@ -113,6 +114,20 @@ export default class Board {
         let colInBoard = square.col< GameSettings.BOARD_SIZE && square.col >= 0;
         return colInBoard && rowInBoard;
     }
-
+    checkCheck(){
+       let kings =Array(2);
+       for(let i =0; i <GameSettings.BOARD_SIZE;i++){
+           for(let j=0;j<GameSettings.BOARD_SIZE;j++){
+                let peice = this.getPiece(Square.at(i,j));
+                if(peice instanceof King){
+                    if(peice.player=== Player.WHITE){
+                        kings[0] = peice;
+                    }else{
+                        kings[1] = peice;
+                    }
+                }
+           }
+       }
+    }
 
 }

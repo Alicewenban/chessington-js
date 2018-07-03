@@ -7,9 +7,7 @@ export default class King extends Piece {
     constructor(player) {
         super(player);
     }
-    isTakeable(){
-        return false;
-    }
+
     getAvailableMoves(board) {
         let square = board.findPiece(this);
         let moves=[];
