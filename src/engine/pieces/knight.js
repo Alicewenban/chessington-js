@@ -33,7 +33,7 @@ export default class Knight extends Piece {
         currentSquare = Square.at(square.row-2,square.col+1);
         if(board.isOnBoard(currentSquare)){moves.push(currentSquare)};
 
-        moves = this.removeInvalidMoves(moves,board);
+        moves = this.removeInvalidMoves(moves,square,board);
 
 
         return moves;    

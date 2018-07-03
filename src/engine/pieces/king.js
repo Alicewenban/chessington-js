@@ -37,8 +37,6 @@ export default class King extends Piece {
         currentSquare = Square.at(square.row,square.col-1);
         if(board.isOnBoard(currentSquare)){moves.push(currentSquare)};
 
-        moves=this.removeInvalidMoves(moves,board);
-
         if(!this.hasMoved){
             if(this.player === Player.WHITE){
                 if(board.getPiece(Square.at(0,0)) instanceof Rook &&
@@ -79,6 +77,9 @@ export default class King extends Piece {
         
     
         }
+
+        moves = this.removeInvalidMoves(moves,square,board);
+        
         return moves;
     }
 }

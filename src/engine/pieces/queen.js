@@ -13,7 +13,7 @@ export default class Queen extends Piece {
         let lateralMoves = this.getLateralMoves(board,square);
         let diagonalMoves = this.getDiagonalMoves(board,square);
         var moves = lateralMoves.concat(diagonalMoves);
-        moves = this.removeInvalidMoves(moves,board);
+        moves = this.removeInvalidMoves(moves,square,board);
         return moves;
         
     }

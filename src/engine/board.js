@@ -4,6 +4,7 @@ import Square from './square';
 import Pawn from './pieces/pawn'
 import King from './pieces/king'
 import Rook from './pieces/rook';
+import Piece from './pieces/piece';
 
 export default class Board {
     constructor(currentPlayer) {
@@ -52,7 +53,7 @@ export default class Board {
             this.enableEnPassant(movingPiece,fromSquare,toSquare);
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
         }
-        checkCheck();
+        this.tagCheck();
     }
 
     disableExpiredEnPassants(){
@@ -114,20 +115,60 @@ export default class Board {
         let colInBoard = square.col< GameSettings.BOARD_SIZE && square.col >= 0;
         return colInBoard && rowInBoard;
     }
-    checkCheck(){
+    tagCheck(){
        let kings =Array(2);
        for(let i =0; i <GameSettings.BOARD_SIZE;i++){
            for(let j=0;j<GameSettings.BOARD_SIZE;j++){
-                let peice = this.getPiece(Square.at(i,j));
-                if(peice instanceof King){
-                    if(peice.player=== Player.WHITE){
-                        kings[0] = peice;
+                let piece = this.getPiece(Square.at(i,j));
+                if(piece instanceof King){
+                    if(piece.player=== Player.WHITE){
+                        kings[0] = Square.at(i,j);
                     }else{
-                        kings[1] = peice;
+                        kings[1] = Square.at(i,j);
                     }
                 }
            }
        }
+       this.checkWhite = this.checkCheck(kings[0],Player.WHITE);
+       this.checkBlack = this.checkCheck(kings[1],Player.BLACK);
+    }
+
+    checkCheck(kingSquare, kingPlayer){
+        if(typeof kingSquare !== 'undefined'){
+            for(let i = 0; i < GameSettings.BOARD_SIZE; i++){
+                for(let j = 0; j < GameSettings.BOARD_SIZE; j++){
+                    if(this.isOccupied(Square.at(i,j)) && this.getPiece(Square.at(i,j)).player !== kingPlayer){
+                        let moves =this.getPiece(Square.at(i,j)).getAvailableMoves(this);
+                        let result =false;
+                        moves.forEach(move => {
+                            if(move.col===kingSquare.col && move.row===kingSquare.row){
+                                result= true;
+                            }
+                        });
+                        if(result){return true;}
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    validateMove(fromSquare,toSquare){
+        let fromBackup = this.getPiece(fromSquare);
+        let toBackup = this.getPiece(toSquare);
+        this.setPiece(fromSquare,undefined);
+        this.setPiece(toSquare,fromBackup);
+        let checkWhiteResult = this.checkWhite;
+        let checkBlackResult = this.checkBlack;
+        this.setPiece(fromSquare,fromBackup);
+        this.setPiece(toSquare,toBackup);
+        switch(this.currentPlayer){
+            case Player.WHITE:
+                return !checkWhiteResult;
+
+            case Player.BLACK:
+                return !checkBlackResult;
+        }
     }
 
 }

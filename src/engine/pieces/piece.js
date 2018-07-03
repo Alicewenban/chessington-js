@@ -1,5 +1,6 @@
 import GameSettings from '../gameSettings';
 import Square from '../square';
+import Board from '../board';
 
 export default class Piece {
     constructor(player) {
@@ -54,39 +55,77 @@ export default class Piece {
 
     getLateralMoves(board,square){
         let moves=[];
-        for(let i =0;i<GameSettings.BOARD_SIZE;i++){
+        for(let i = 0; i<GameSettings.BOARD_SIZE; i++){
             let nextSquare = Square.at(square.row,i);
+            let shouldbreak = false;
             if(i!=square.col){
                 if(board.isOccupied(nextSquare)){
                     if(board.getPiece(nextSquare).player === this.player){
-                        break;
+                        if(i<square.col){
+                            i = square.col;
+                        } else {
+                            shouldbreak = true;
+                        }
                     } else {
-                        moves.push(nextSquare);
-                        break;
+                        if(i<square.col){
+                            moves.push(nextSquare);
+                            i = square.col;
+                        } else {
+                            moves.push(nextSquare);
+                            shouldbreak = true;
+                        }
+                        
                     }
                 } else {
                     moves.push(nextSquare);
                 }
                 
             }
+            if(shouldbreak){break;}
         }
-        for(let i =0;i<GameSettings.BOARD_SIZE;i++){
+        for(let i = 0; i<GameSettings.BOARD_SIZE; i++){
+            let nextSquare = Square.at(i,square.col);
+            let shouldbreak = false;
             if(i!=square.row){
-                moves.push(Square.at(i,square.col));
+                if(board.isOccupied(nextSquare)){
+                    if(board.getPiece(nextSquare).player === this.player){
+                        if(i<square.row){
+                            i = square.row;
+                        } else {
+                            shouldbreak = true;
+                        }
+                    } else {
+                        if(i<square.row){
+                            moves.push(nextSquare);
+                            i = square.row;
+                        } else {
+                            moves.push(nextSquare);
+                            shouldbreak = true;
+                        }
+                    }
+                } else {
+                    moves.push(nextSquare);
+                }
             }
+            if(shouldbreak){break;}
         }
         return moves;
     }
 
-    removeInvalidMoves(moves,board){
+    removeInvalidMoves(moves,currentSquare,board){
         moves.forEach(move=>{
-           var movingTo=board.getPiece(move) ;
+           var movingTo = board.getPiece(move);
             if(typeof movingTo != 'undefined'){  
                 if(movingTo.player === this.player ){
                     moves.splice(moves.indexOf(move),1);
                 }
             }
         });
+        moves.forEach(move=>{
+            if(!board.validateMove(currentSquare,move)){
+                moves.splice(moves.indexOf(move),1);
+            }
+         });
         return moves;
     }
 }

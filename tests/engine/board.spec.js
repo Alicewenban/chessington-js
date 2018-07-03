@@ -8,12 +8,15 @@ import King from '../../src/engine/pieces/king';
 
 describe('Board', () => {
 
+let board;
+beforeEach(() => { // Common code executed before each test.
+    board = new Board();
+});
+
     describe('pawns', () => {
 
-        let board;
-        beforeEach(() => { // Common code executed before each test.
-            board = new Board();
-        });
+        
+        
 
         it('can be added to the board', () => {
             // Arrange
@@ -39,19 +42,39 @@ describe('Board', () => {
             board.findPiece(pawn).should.eql(square); // Object equivalence: different objects, same data
         });
 
-        it('check is detected', () => {
-            // Arrange
-            const king = new King(Player.BLACK);
-            const rook = new Rook(Player.WHITE);
-
-            // Act
-            board.setPiece(Square.at(7,4),king);
-            board.setPiece(Square.at(5,3),rook);
-            board.movePiece(Square.at(5,3),Square.at(5,4));
-
-            // Assert
-            board.checkBlack.should.be.true;
-        });
-
     });
+
+    it('check is detected', () => {
+        // Arrange
+        const king = new King(Player.BLACK);
+        const oppking = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+
+        // Act
+        board.setPiece(Square.at(7,4),king);
+        board.setPiece(Square.at(0,0),oppking);
+        board.setPiece(Square.at(5,3),rook);
+        board.movePiece(Square.at(5,3),Square.at(5,4));
+
+        // Assert
+        board.checkBlack.should.be.true;
+    });
+
+    it('cannot make move that gets you into check', () => {
+        // Arrange
+        const king = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+        const opprook = new Rook(Player.BLACK);
+
+        // Act
+        board.setPiece(Square.at(0,0),king);
+        board.setPiece(Square.at(2,0),opprook);
+        board.setPiece(Square.at(1,0),rook);
+        console.log(rook.getAvailableMoves(board));
+        let cannotMoveBadly = rook.getAvailableMoves(board) === [Square.at(2,0)];
+        // Assert
+        cannotMoveBadly.should.be.true;
+    });
+
+
 });

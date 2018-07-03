@@ -39,8 +39,6 @@ export default class Pawn extends Piece {
             moves.push(diagB);
         }
 
-        moves = this.removeInvalidMoves(moves,board);
-
         if(this.leftEnPassant){
             moves.push(Square.at(square.row+direction*1,square.col-1));
         }
@@ -49,6 +47,8 @@ export default class Pawn extends Piece {
             moves.push(Square.at(square.row+direction*1,square.col+1));
         }
         
+        moves = this.removeInvalidMoves(moves,square,board);
+
         return moves;
     }
 }

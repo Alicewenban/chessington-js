@@ -14,7 +14,7 @@ export default class Bishop extends Piece {
     getAvailableMoves(board) {
         let square = board.findPiece(this);
         let moves= this.getDiagonalMoves(board,square);
-        moves = this.removeInvalidMoves(moves,board);
+        moves = this.removeInvalidMoves(moves,square,board);
         return moves;
     }
 
